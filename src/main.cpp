@@ -13,11 +13,14 @@
 #include <WebServer.h>
 
 #define BUFF_SIZE 1024
+#define VBAT_ALERT_THRESHOLD 3.5f
+#define VBAT_DISCONNECT_THRESHOLD 3.4f
 
 WiFiClient net;
 MQTTClient client(BUFF_SIZE);
 
-void setup ( void ) {  
+void setup ( void ) {
+  system_deep_sleep_set_option(2); // No RF calibration
   int start = millis();
   pinMode(D5, INPUT_PULLUP);  
   bool cfgBtn = digitalRead(D5);
@@ -26,8 +29,7 @@ void setup ( void ) {
   Utils::initStorage();
   Serial.begin(115200);
 
-  Network::init(Utils::settings.ssid, Utils::settings.pass);  
-  Serial.println("el pin dice " + String(digitalRead(D5),10));  
+  Network::init(Utils::settings.ssid, Utils::settings.pass);    
   if (Network::getMode() == Network::MODES::ST && !cfgBtn) {
     client.begin(Utils::settings.broker, net);
 
@@ -36,11 +38,13 @@ void setup ( void ) {
       delay(10);
       attempts++;
     }
+    // TODO: Check analog read and if it's lower than vbat threshold raise an alert
 
     client.publish(String(Utils::settings.topic), Utils::getSensorValues());
     Serial.println("Duration: " + String(millis() - start, DEC));
     delay(10);
-    ESP.deepSleep(((Utils::settings.sleep * 1000)));
+
+    ESP.deepSleep(((Utils::settings.sleep * 1000000)));
   }
 
   Serial.println("Starting config mode");

@@ -35,6 +35,15 @@ namespace Network {
   bool beginST(const char* ssid, const char* pwd) {  
     int attempts = 0;
 
+    #ifdef __NO_DHCP
+      IPAddress staticIP(192, 168, 0, 20); //static IP address
+      IPAddress gateway(192, 168, 0, 1); //Router's IP address
+      IPAddress subnet(255, 255, 255, 0);
+      IPAddress dns(8, 8, 8, 8);
+      WiFi.hostname(Utils::getDeviceId());
+      WiFi.config(staticIP, subnet, gateway, dns);
+    #endif
+    
     WiFi.mode(WIFI_STA);
     WiFi.disconnect(); // disconnect from any previously connected network (open networks?) 
     
