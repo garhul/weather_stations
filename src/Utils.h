@@ -3,18 +3,39 @@
 
 #define EEPROM_SIZE 512
 #define SETTINGS_ADDR 0x00
-
 #include <EEPROM.h>
 #include <Arduino.h>
 #include <types.h>
 #include <ESP8266WiFi.h>
 #include <version.h>
+
+#define USE_DHT11
+#ifdef USE_DHT11
+
 #include "DHT.h"
+#define DHTPIN D3
+#define DHTTYPE DHT11
+
+#endif
+
+#define USE_BMP280
+
+#ifdef USE_BMP280
 #include <Adafruit_BMP280.h>
+
+#endif
+
+// #define USE_BME280
+
+#ifdef USE_BME280
+
+#include <Adafruit_BME280.h>
+
+#endif
+
 #include <Wire.h>
 #include <SPI.h>
-#define DHTPIN 2
-#define DHTTYPE DHT11
+
 #define VBAT_MULTIPLIER 0.0046f
 
 namespace Utils {
@@ -26,7 +47,7 @@ namespace Utils {
   String getInfoJson();
   String getAnnounceInfo();
   String getDeviceId();
-  String getSensorValues();
+  sensorData getSensorData();
 }
 
 #endif
