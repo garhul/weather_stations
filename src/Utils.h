@@ -7,7 +7,6 @@
 #include <Arduino.h>
 #include <types.h>
 #include <ESP8266WiFi.h>
-#include <version.h>
 
 #define USE_DHT11
 #ifdef USE_DHT11
