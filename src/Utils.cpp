@@ -31,53 +31,42 @@ namespace Utils {
     return String("WeatherStation_") + String(ESP.getChipId(), HEX);
   }
 
-  sensorData readSensors() {
-#ifdef USE_DHT
+  sensorData getSensorData() {
+    sensorData d;
+    d.humidity = "NA";
+    d.temp = "NA";
+    d.pressure = "NA";
+    d.vbat = String(ESP.getVcc() / 900.9f);
+
+#ifdef USE_DHT11
     DHT dht(DHTPIN, DHTTYPE);
     dht.begin();
+    d.humidity = String(dht.readHumidity(), 1);
 #endif
 
 #ifdef USE_BMP280
     Adafruit_BMP280 bmp;
-    sensorData d;
-    d.vbat = String((analogRead(A0) * VBAT_MULTIPLIER), 2);
-    if (!bmp.begin()) {
-      d.humidity = "NA";
-      d.temp = "NA";
-      d.pressure = "NA";
-    }
-    else {
-      d.humidity = "NA";
+    if (bmp.begin()) {
       d.temp = String(bmp.readTemperature(), 1);
-      d.pressure = String(bmp.readPressure(), 1);
+      d.pressure = String(bmp.readPressure() / 100.0f, 1);
     }
-    return d;
 #endif
 
 #ifdef USE_BME280
     Adafruit_BME280 bme;
-    sensorData d;
-    d.vbat = String((analogRead(A0) * VBAT_MULTIPLIER), 2);
-    if (!bme.begin()) {
-      d.humidity = "NA";
-      d.temp = "NA";
-      d.pressure = "NA";
-    }
-    else {
+    if (bme.begin()) {
       d.humidity = String(bme.readHumidity(), 1);
       d.temp = String(bme.readTemperature(), 1);
-      d.pressure = String(bme.readPressure(), 1);
+      d.pressure = String(bmp.readPressure() / 100.0f, 1);
     }
-    return d;
 #endif
-
-
+    return d;
   }
 
   String getInfoJson() {
     String info = "{\"ssid\":\"" + String(settings.ssid) +
       "\",\"ap_ssid\":\"" + String(settings.ap_ssid) +
-      "\",\"description\":\"" + String(settings.description) +
+      "\",\"name\":\"" + String(settings.name) +
       "\",\"sleep_time\":\"" + String(settings.sleep) +
       "\",\"device_id\":\"" + String(getDeviceId()) +
       "\",\"broker\":\"" + String(settings.broker) +

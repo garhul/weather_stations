@@ -9,23 +9,23 @@
 #include <ESP8266WiFi.h>
 #include <version.h>
 
-// #define USE_DHT11
-#ifdef USE_DHT
+#define USE_DHT11
+#ifdef USE_DHT11
 
 #include "DHT.h"
-#define DHTPIN 2
+#define DHTPIN D3
 #define DHTTYPE DHT11
 
 #endif
 
-// #define USE_BMP280
+#define USE_BMP280
 
 #ifdef USE_BMP280
 #include <Adafruit_BMP280.h>
 
 #endif
 
-#define USE_BME280
+// #define USE_BME280
 
 #ifdef USE_BME280
 
@@ -47,7 +47,7 @@ namespace Utils {
   String getInfoJson();
   String getAnnounceInfo();
   String getDeviceId();
-  sensorData readSensors();
+  sensorData getSensorData();
 }
 
 #endif

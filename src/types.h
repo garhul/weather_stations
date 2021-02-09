@@ -8,7 +8,7 @@ typedef struct {
   char topic[32];
   char broker[32];
   int sleep;
-  char description[100];
+  char name[100];
   char ap_ssid[32];
 } settings_t;
 
