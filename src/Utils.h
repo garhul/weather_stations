@@ -8,7 +8,7 @@
 #include <types.h>
 #include <ESP8266WiFi.h>
 
-#define USE_DHT11
+// #define USE_DHT11
 #ifdef USE_DHT11
 
 #include "DHT.h"
@@ -17,14 +17,14 @@
 
 #endif
 
-#define USE_BMP280
+// #define USE_BMP280
 
 #ifdef USE_BMP280
 #include <Adafruit_BMP280.h>
 
 #endif
 
-// #define USE_BME280
+#define USE_BME280
 
 #ifdef USE_BME280
 

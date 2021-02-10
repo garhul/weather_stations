@@ -57,7 +57,7 @@ namespace Utils {
     if (bme.begin()) {
       d.humidity = String(bme.readHumidity(), 1);
       d.temp = String(bme.readTemperature(), 1);
-      d.pressure = String(bmp.readPressure() / 100.0f, 1);
+      d.pressure = String(bme.readPressure() / 100.0f, 1);
     }
 #endif
     return d;
